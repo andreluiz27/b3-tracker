@@ -4,12 +4,7 @@ Handles external api connection to fetch b3 data
 from celery import shared_task
 
 from yahooquery import Ticker
-
-# def stock_tracker():
-#     stock = Ticker("SÍMBOLO DA AÇÃO")
-#     while(True):
-#         stock.history
-
+from tracker_app import models
 
 @shared_task()
 def stock_tracker():
@@ -32,6 +27,19 @@ def stock_tracker():
     close_value = float(stock_df_first_row.close.values)
     volume = int(stock_df_first_row.volume.values)
     interval = "30m"
+
+    # saving in database
+    stock_tracker_model = models.StockTracker(
+        symbol=symbol,
+        dt_time=dt_time,
+        open_value=open_value,
+        low_value=low_value,
+        high_value=high_value,
+        close_value=close_value,
+        volume=volume,
+        interval=interval,
+    )
+    stock_tracker_model.save() 
 
 
 petr = Ticker("PETR4.SA")
