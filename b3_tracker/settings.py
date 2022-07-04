@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "tracker_app",
+    "rest_framework",
     "django_celery_beat",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -131,11 +132,3 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 # CELERY_TIMEZONE = 'Africa/Nairobi'
-
-
-CELERY_BEAT_SCHEDULE = {
-    "add-every-30-seconds": {
-        "task": "b3_tracker.api.print_hello_world",
-        "schedule": 5.0,
-    }
-}

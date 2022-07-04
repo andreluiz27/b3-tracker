@@ -5,17 +5,21 @@ from celery import shared_task
 
 from yahooquery import Ticker
 from tracker_app import models
+import logging
 
-@shared_task()
+@shared_task(name="stock_tracker")
 def stock_tracker():
 
     stock = Ticker("PETR4.SA")
-
+    logging.info(stock)
+    
+  
     # df, i.e, a dataframe type
-    stock_df_time_serie = stock.history(period="1d", interval="30m")
-
+    stock_df_time_serie = stock.history(period="1d", interval="1m")
+    logging.info(stock_df_time_serie)
+    
     # get first row
-    stock_df_first_row = stock_df_time_serie.head(1)
+    stock_df_first_row = stock_df_time_serie.tail(1)
 
     # It's a multi index situation
     symbol = stock_df_first_row.index[0][0]  # symbol it's a index
@@ -43,6 +47,6 @@ def stock_tracker():
 
 
 petr = Ticker("PETR4.SA")
-a = petr.history(period="1d", interval="30m")
+a = petr.history(period="1d", interval="1m")
 
 print(a)

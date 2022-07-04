@@ -20,4 +20,5 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("start-tracking", views.StartTrackingView.as_view(), name="tracking")
 ]
