@@ -1,4 +1,7 @@
 from requests import request
+from django.template import loader
+
+from django.http import HttpResponse
 from rest_framework.response import Response
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 from rest_framework.decorators import api_view
@@ -8,12 +11,10 @@ from rest_framework import generics
 from tracker_app.tasks import create_periodic_task
 
 
-@api_view(["GET"])
 def index(request):
-    # api.stock_tracker()
-    #  create_periodic_task()
-    return Response({"message": "Backend is running"})
+  template = loader.get_template('tracker_app/index.html')
 
+  return HttpResponse(template.render())
 
 @api_view(["POST"])
 def start_tracking(request):
