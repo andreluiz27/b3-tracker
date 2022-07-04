@@ -6,18 +6,27 @@ from celery import shared_task
 from yahooquery import Ticker
 from tracker_app import models
 import logging
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
+import json
 
+def create_periodic_task(stock_name):
+    # interval = IntervalSchedule.objects.
+    PeriodicTask.objects.create(
+        interval=IntervalSchedule.objects.all().first(),
+        name=stock_name,
+        args=json.dumps([stock_name,]),
+        task="stock_tracker",
+    )
 @shared_task(name="stock_tracker")
-def stock_tracker():
+def stock_tracker(stock_name):
 
-    stock = Ticker("PETR4.SA")
+    stock = Ticker(stock_name)
     logging.info(stock)
-    
-  
+
     # df, i.e, a dataframe type
     stock_df_time_serie = stock.history(period="1d", interval="1m")
     logging.info(stock_df_time_serie)
-    
+
     # get first row
     stock_df_first_row = stock_df_time_serie.tail(1)
 
@@ -43,10 +52,4 @@ def stock_tracker():
         volume=volume,
         interval=interval,
     )
-    stock_tracker_model.save() 
-
-
-petr = Ticker("PETR4.SA")
-a = petr.history(period="1d", interval="1m")
-
-print(a)
+    stock_tracker_model.save()
