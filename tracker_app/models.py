@@ -27,3 +27,8 @@ class StockTracker(models.Model):
     volume = models.IntegerField()
     dt_time = models.DateTimeField()
     interval = models.CharField(max_length=7)
+
+class StockDomain(models.Model):
+    symbol = models.CharField(max_length=10)
+    company_name = models.CharField(max_length=50)
+
