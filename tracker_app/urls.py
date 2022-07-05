@@ -20,5 +20,8 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("start-tracking", views.StartTrackingView.as_view(), name="tracking")
+    path("stocks", views.stocks_page, name="stocks"),
+    path("tracking-forms", views.tracking_forms_page, name="trackingforms"),
+    path("start-tracking", views.StartTrackingView.as_view(), name="tracking"),
+
 ]

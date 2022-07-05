@@ -16,11 +16,13 @@ def index(request):
 
   return HttpResponse(template.render())
 
-@api_view(["POST"])
-def start_tracking(request):
-    # api.stock_tracker()
-    # create_periodic_task()
-    return Response({"message": "Tracker has just started"})
+def stocks_page(request):
+  template = loader.get_template('tracker_app/stocks.html')
+  return HttpResponse(template.render())
+  
+def tracking_forms_page(request):
+  template = loader.get_template('tracker_app/tracking_forms.html')
+  return HttpResponse(template.render())
 
 
 class StartTrackingView(APIView):
