@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "tracker_app",
+    "rest_framework",
     "django_celery_beat",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -118,6 +120,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -130,12 +134,7 @@ CELERY_RESULT_BACKEND = "redis://localhost:6380"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
-# CELERY_TIMEZONE = 'Africa/Nairobi'
+# CELERY_TIMEZONE = 'Africa/Nairo+
 
 
-CELERY_BEAT_SCHEDULE = {
-    "add-every-30-seconds": {
-        "task": "b3_tracker.api.print_hello_world",
-        "schedule": 5.0,
-    }
-}
+
