@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from tracker_app.serializers import StockTrackerSeralizer
 from tracker_app.tasks import create_periodic_task
-from tracker_app.models import StockDomain
+from tracker_app.models import StockDomain, StockTracker
 from django.shortcuts import redirect
 from django_celery_beat.models import PeriodicTask
 
@@ -37,14 +37,27 @@ def tracking_forms_page(request):
     stocks_domain = StockDomain.objects.all()
     symbols_list = [stock.symbol for stock in stocks_domain]
     context = {"symbols": symbols_list}
-    template = loader.get_template("tracker_app/stocks.html")
     return HttpResponse(template.render(context, request))
 
 
 def tracked_stock_detail(request, stock_symbol):
-    template = loader.get_template("tracker_app/stocks.html")
-    print(stock_symbol)
-    return HttpResponse(template.render())
+    template = loader.get_template("tracker_app/tracked_stock.html")
+    stored_data_stock = StockTracker.objects.filter(symbol=stock_symbol).order_by("-dt_time")
+
+    stock_data_list = []
+    for data in stored_data_stock:
+        data_as_dict = {
+            "symbol": data.symbol,
+            "open_value": data.open_value,
+            "close_value": data.close_value,
+            "high_value": data.high_value,
+            "low_value": data.low_value,
+            "datetime": data.dt_time,
+        }
+        stock_data_list.append(data_as_dict)
+
+    context = {"stock_data_list": stock_data_list, "symbol": stock_symbol}
+    return HttpResponse(template.render(context, request))
 
 
 class StartTrackingView(APIView):
