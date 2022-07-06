@@ -1,9 +1,27 @@
 {% block content %}
-  {% include 'tracker_app/index.html' %}
-  <div class="content">
-    <h2>Responsive Sidebar Example</h2>
-    <p>This example use media queries to transform the sidebar to a top navigation bar when the screen size is 700px or less.</p>
-    <p>We have also added a media query for screens that are 400px or less, which will vertically stack and center the navigation links.</p>
-    <h3>Resize the browser window to see the effect.</h3>
-  </div>
+    {% include 'tracker_app/index.html' %}
+    <div class="content">
+        <!DOCTYPE html>
+        <html>
+            <title>W3.CSS</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+            <body>
+                <div class="w3-container">
+                    <h2>Avatar List</h2>
+                    <p>You can combine w3-ul and the w3-bar classes to create an avatar list:</p>
+                    <ul class="w3-ul w3-card-4">
+                        {% for symbol in symbols %}
+                            <li class="w3-bar">
+                                <div class="w3-bar-item">
+                                    <a href="{% url 'trackedstock' stock_symbol=symbol  %}"><span class="w3-large">{{ symbol }}</span></a>
+                                    <br>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </body>
+        </html>
+    </div>
 {% endblock %}

@@ -10,14 +10,24 @@ from tracker_app import models
 import json
 import pandas as pd
 
+
 def create_periodic_task(stock_name):
     # interval = IntervalSchedule.objects.
-    PeriodicTask.objects.create(
+    tracking_task, created = PeriodicTask.objects.get_or_create(
         interval=IntervalSchedule.objects.all().first(),
         name=stock_name,
-        args=json.dumps([stock_name,]),
+        args=json.dumps(
+            [
+                stock_name,
+            ]
+        ),
         task="stock_tracker",
     )
+    
+    return created
+    
+
+
 @shared_task(name="stock_tracker")
 def stock_tracker(stock_name):
 
@@ -28,7 +38,7 @@ def stock_tracker(stock_name):
     stock_df_time_serie = stock.history(period="1d", interval="1m")
     logging.info(stock_df_time_serie)
 
-    if isinstance(stock_df_time_serie,pd.DataFrame):
+    if isinstance(stock_df_time_serie, pd.DataFrame):
         # get first row
         stock_df_first_row = stock_df_time_serie.tail(1)
 
@@ -56,4 +66,6 @@ def stock_tracker(stock_name):
         )
         stock_tracker_model.save()
     else:
-        logging.info(f"Not a data frame, what we have is type {type(stock_df_time_serie)} and his content {stock_df_time_serie} ")
+        logging.info(
+            f"Not a data frame, what we have is type {type(stock_df_time_serie)} and his content {stock_df_time_serie} "
+        )
