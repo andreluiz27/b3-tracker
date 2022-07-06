@@ -64,7 +64,12 @@ def stock_tracker(stock_name):
             volume=volume,
             interval=interval,
         )
+        stock_trigger_model = models.StockTrigger.get(stock__symbol=stock_name)
+
+        if close_value > stock_trigger_model.upper_close_limit: 
+            
         stock_tracker_model.save()
+        
     else:
         logging.info(
             f"Not a data frame, what we have is type {type(stock_df_time_serie)} and his content {stock_df_time_serie} "
