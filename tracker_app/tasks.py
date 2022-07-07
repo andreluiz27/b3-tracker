@@ -2,6 +2,7 @@
 Handles external api connection to fetch b3 data
 """
 from celery import shared_task
+from django.core.mail import send_mail
 
 from yahooquery import Ticker
 import logging
@@ -9,6 +10,7 @@ from django_celery_beat.models import PeriodicTask, IntervalSchedule
 from tracker_app import models
 import json
 import pandas as pd
+from b3_tracker.settings import EMAIL_SENDER, EMAIL_RECEIVER
 
 
 def create_periodic_task(stock_name):
@@ -23,9 +25,8 @@ def create_periodic_task(stock_name):
         ),
         task="stock_tracker",
     )
-    
+
     return created
-    
 
 
 @shared_task(name="stock_tracker")
@@ -64,12 +65,41 @@ def stock_tracker(stock_name):
             volume=volume,
             interval=interval,
         )
-        stock_trigger_model = models.StockTrigger.get(stock__symbol=stock_name)
+        stock_trigger_model = models.StockTrigger.objects.filter(
+            stock__symbol=stock_name
+        ).first()
 
-        if close_value > stock_trigger_model.upper_close_limit: 
-            
+        # Bad if logic, should be refactored!!!!
+        if stock_trigger_model and close_value > stock_trigger_model.upper_close_limit:
+            logging.info("Stock reached upper limit")
+
+            stock_trigger_model.was_triggered = True
+            stock_trigger_model.save()
+
+            send_mail(
+                "Subject here",
+                f"{stock_name} reached close value upper limit of {close_value}",
+                EMAIL_SENDER,
+                [EMAIL_RECEIVER],
+                fail_silently=False,
+            )
+
+        if stock_trigger_model and close_value < stock_trigger_model.lower_close_limit:
+            logging.info("Stock reached lower limit")
+
+            stock_trigger_model.was_triggered = True
+            stock_trigger_model.save()
+
+            send_mail(
+                "Subject here",
+                f"{stock_name} reached close value lower limit of {close_value}",
+                EMAIL_SENDER,
+                [EMAIL_RECEIVER],
+                fail_silently=False,
+            )
+
         stock_tracker_model.save()
-        
+
     else:
         logging.info(
             f"Not a data frame, what we have is type {type(stock_df_time_serie)} and his content {stock_df_time_serie} "

@@ -11,8 +11,8 @@ services:
       - .:/code
     ports:
       - "80:8000"
-    # env_file:
-    #   - python.env
+    env_file:
+      - python.env
     depends_on:
       - redis
 
@@ -24,9 +24,11 @@ services:
     command: /bin/bash -c "celery -A b3_tracker.celery.app worker -B --scheduler django_celery_beat.schedulers:DatabaseScheduler -l info"
     ports:
       - "81:8000"
+      - "587:587"
+    
     volumes:
       - .:/code
-    # env_file:
-    #   - python.env
+    env_file:
+      - python.env
     links:
       - redis
