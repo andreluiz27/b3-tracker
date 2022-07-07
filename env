@@ -1,0 +1,11 @@
+SECRET_KEY="django-insecure-nyl8y+iq_pny=llbt9nhy@!^o64jiok$vk$%^gym&!)d-e(+5v"
+
+
+
+EMAIL_HOST="smtp.mailtrap.io"
+EMAIL_PORT="2525"
+EMAIL_HOST_USER="85f88e1e8727e1"
+EMAIL_HOST_PASSWORD="a4633618c75db4"
+
+EMAIL_SENDER="andrelz.ferreira.nogueira@gmail.com"
+EMAIL_RECEIVER="andrelz.ferreira.nogueira@gmail.com"

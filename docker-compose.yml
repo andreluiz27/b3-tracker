@@ -1,0 +1,34 @@
+version: "3.3"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: b3_tracker/python
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "80:8000"
+    env_file:
+      - python.env
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:5.0.8-alpine
+
+  celery-beat:
+    image: b3_tracker/python
+    command: /bin/bash -c "celery -A b3_tracker.celery.app worker -B --scheduler django_celery_beat.schedulers:DatabaseScheduler -l info"
+    ports:
+      - "81:8000"
+      - "587:587"
+    
+    volumes:
+      - .:/code
+    env_file:
+      - python.env
+    links:
+      - redis

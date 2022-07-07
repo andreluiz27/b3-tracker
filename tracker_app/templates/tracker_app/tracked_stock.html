@@ -1,0 +1,64 @@
+{% block content %}
+  {% include 'tracker_app/index.html' %}
+  <div class="content">
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+          }
+          
+          #customers td,
+          #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+          }
+          
+          #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+          }
+          
+          #customers tr:hover {
+            background-color: #ddd;
+          }
+          
+          #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04aa6d;
+            color: white;
+          }
+        </style>
+      </head>
+      <body>
+        <h1> {{ symbol }}</h1>
+
+        <table id="customers">
+          <tr>
+            <th>Symbol</th>
+            <th>Open</th>
+            <th>Close</th>
+            <th>High</th>
+            <th>Datetime</th>
+
+          </tr>
+
+          {% for stock_data in stock_data_list %}
+            <tr>
+              <td>{{ stock_data.symbol }}</td>
+              <td>{{ stock_data.open_value }}</td>
+              <td>{{ stock_data.close_value }}</td>
+              <td>{{ stock_data.high_value }}</td>
+              <td>{{ stock_data.datetime }}</td>
+            
+            </tr>
+          {% endfor %}
+        </table>
+      </body>
+    </html>
+  </div>
+{% endblock %}

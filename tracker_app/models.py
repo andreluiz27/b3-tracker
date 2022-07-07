@@ -8,7 +8,7 @@ class StockTracker(models.Model):
     """
 
     Fields:
-    
+
     symbol: symbol of stock being tracked (e.g PETR4.SA)
     open_value: open value of tracked stock inside tracker interval
     low_value: lowest value of tracked stock inside tracker interval
@@ -16,7 +16,7 @@ class StockTracker(models.Model):
     close_value: close value of tracked stock inside tracker interval
     volume: volume traded of tracked stock inside tracker interval
     dt_time: open value of tracked stock inside tracker interval
-    interval: tracker time interval   
+    interval: tracker time interval
     """
 
     symbol = models.CharField(max_length=10)
@@ -28,7 +28,19 @@ class StockTracker(models.Model):
     dt_time = models.DateTimeField()
     interval = models.CharField(max_length=7)
 
+
 class StockDomain(models.Model):
     symbol = models.CharField(max_length=10)
     company_name = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.symbol
 
+
+class StockTrigger(models.Model):
+    upper_close_limit = models.FloatField()
+    lower_close_limit = models.FloatField()
+    stock = models.ForeignKey(
+        StockDomain, on_delete=models.CASCADE, default=None
+    )
+    was_triggered = models.BooleanField(default=False)

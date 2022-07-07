@@ -22,6 +22,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("stocks", views.stocks_page, name="stocks"),
     path("tracking-forms", views.tracking_forms_page, name="trackingforms"),
+    path("tracked-stock/<str:stock_symbol>", views.tracked_stock_detail, name="trackedstock"),
     path("start-tracking", views.StartTrackingView.as_view(), name="tracking"),
 
 ]
